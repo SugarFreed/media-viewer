@@ -65,6 +65,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInst, _In_opt_ HINSTANCE hInstPrev, _In_ PS
         DispatchMessageW(&msg);
     }
     CoUninitialize();
+    WinProcClassDestructor(winProcObj);
     return 0;
 }
 
