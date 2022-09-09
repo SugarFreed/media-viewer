@@ -1,5 +1,7 @@
 #include <windows.h>
 #include <windef.h>
+#include <objbase.h>
+#include <shobjidl.h>
 
 #include "WinProcClass.h"
 
@@ -27,6 +29,7 @@ void WinProcClassDestructor(WinProcClass *object)
 // Message Handler
 int WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+
     WinProcClass* winProcObj = NULL;
     if (uMsg == WM_CREATE)
     {

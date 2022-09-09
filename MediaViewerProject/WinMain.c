@@ -4,8 +4,6 @@
 
 #include <windows.h>
 #include <windef.h>
-#include <objbase.h>
-#include <shobjidl.h>
 
 #include "WinProcClass.h"
 
