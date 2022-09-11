@@ -3,27 +3,18 @@
 #endif 
 
 #include <windows.h>
+#include <stdio.h>
 #include <windef.h>
 #include <objbase.h>
 #include <shobjidl.h>
-#include <combaseapi.h>
+//#include <combaseapi.h>
 
 #include "WinProcClass.h"
 
 int APIENTRY WinMain(_In_ HINSTANCE hInst, _In_opt_ HINSTANCE hInstPrev, _In_ PSTR cmdline, _In_ int cmdshow)
 {
     HRESULT hr = CoInitialize(NULL);
-    if (SUCCEEDED(hr))
-    {
-        IFileOpenDialog* pFileOpen = NULL;
-        hr = CoCreateInstance(&CLSID_FileOpenDialog, NULL, CLSCTX_ALL, &IID_IFileOpenDialog, (void**) pFileOpen);
-        if (SUCCEEDED(hr))
-        {
-            pFileOpen->lpVtbl->Show(pFileOpen, NULL);
-            IShellItem* pItem = NULL;
-            pFileOpen->lpVtbl->GetResult(pFileOpen, pItem);
-        }
-    }
+    
     // Create process object
     WinProcClass* winProcObj = WinProcClassConstructor();
     
@@ -64,6 +55,18 @@ int APIENTRY WinMain(_In_ HINSTANCE hInst, _In_opt_ HINSTANCE hInstPrev, _In_ PS
     }
     
     ShowWindow(hwnd, cmdshow);  // Display window based on cmdshow value
+
+    if (SUCCEEDED(hr))
+    {
+        IFileOpenDialog* pFileOpen = NULL;
+        hr = CoCreateInstance(&CLSID_FileOpenDialog, NULL, CLSCTX_ALL, &IID_IFileOpenDialog, (LPVOID*)&pFileOpen);
+        if (SUCCEEDED(hr) && pFileOpen != NULL)
+        {
+            pFileOpen->lpVtbl->Show(pFileOpen, NULL);
+            IShellItem** pItem = NULL;
+            pFileOpen->lpVtbl->GetResult(pFileOpen, pItem);
+        }
+    }
     
     // Begin message loop
     MSG msg;
