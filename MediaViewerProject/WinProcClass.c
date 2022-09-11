@@ -21,6 +21,7 @@ WinProcClass* WinProcClassConstructor()
     VTABLE vTbl = {
         vTbl.WinProc = WinProc,
         vTbl.WinPaint = WinPaint,
+        vTbl.WinClose = WinClose,
         vTbl.WinSize = WinSize
     };
     object->vTable = &vTbl;
@@ -32,7 +33,7 @@ void WinProcClassDestructor(WinProcClass *object)
     free(object);
 }
 
-// Procedure Function
+// Main Procedure Function
 int WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     WinProcClass* winProcObj = NULL;
@@ -52,7 +53,7 @@ int WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
         return WinPaint(hwnd);
     case WM_CLOSE:
-        DestroyWindow(hwnd);
+        return WinClose(hwnd);
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
@@ -68,6 +69,10 @@ int WinPaint(HWND hwnd)
 
     EndPaint(hwnd, &winPaintStruct);
     return 0;
+}
+int WinClose(HWND hwnd)
+{
+    return DestroyWindow(hwnd);
 }
 int WinSize(HWND hwnd, LPARAM lParam, WPARAM wParam)
 {

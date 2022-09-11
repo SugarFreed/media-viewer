@@ -60,7 +60,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInst, _In_opt_ HINSTANCE hInstPrev, _In_ PS
     
     // Begin message loop
     MSG msg;
-    while (GetMessage(&msg, NULL, 0, 0) > 0)
+    while (GetMessage(&msg, hwnd, 0, 0) > 0)
     {
         TranslateMessage(&msg);
         DispatchMessageW(&msg);

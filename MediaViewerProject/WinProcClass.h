@@ -3,6 +3,7 @@ typedef struct VTABLE
 {
 	int (*WinProc)(HWND, UINT, WPARAM, LPARAM);
 	int (*WinPaint)(HWND);
+	int (*WinClose)(HWND);
 	int (*WinSize)(HWND, LPARAM, WPARAM);
 }VTABLE;
 
