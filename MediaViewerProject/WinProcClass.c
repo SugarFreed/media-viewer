@@ -1,22 +1,29 @@
 #include <windows.h>
 #include <windef.h>
+#include <objbase.h>
+#include <shobjidl.h>
 
 #include "WinProcClass.h"
+
+int WinProc(HWND, UINT, WPARAM, LPARAM);
+int WinPaint(HWND);
+int WinClose(HWND);
+int WinSize(HWND, LPARAM, WPARAM);
 
 // Object control
 WinProcClass* WinProcClassConstructor()
 {
-    
     WinProcClass* object = (WinProcClass*)malloc(sizeof(WinProcClass));
     if (object == NULL) 
     {
         return NULL;
     }
-
-    object->WinProc = WinProc;
-
-    object->WinPaint = WinPaint;
-    object->WinSize = WinSize;
+    VTABLE vTbl = {
+        vTbl.WinProc = WinProc,
+        vTbl.WinPaint = WinPaint,
+        vTbl.WinSize = WinSize
+    };
+    object->vTable = &vTbl;
 
     return object;
 }
@@ -25,10 +32,9 @@ void WinProcClassDestructor(WinProcClass *object)
     free(object);
 }
 
-// Message Handler
+// Procedure Function
 int WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-
     WinProcClass* winProcObj = NULL;
     if (uMsg == WM_CREATE)
     {
@@ -40,10 +46,13 @@ int WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         winProcObj = (WinProcClass*)GetWindowLongPtr(hwnd, GWLP_USERDATA); // Retrieve data from GWLP_USERDATA
     }
+
     switch (uMsg)
     {
     case WM_PAINT:
-        WinPaint(hwnd);
+        return WinPaint(hwnd);
+    case WM_CLOSE:
+        DestroyWindow(hwnd);
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }

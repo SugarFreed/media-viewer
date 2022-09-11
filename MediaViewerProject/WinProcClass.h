@@ -1,18 +1,17 @@
 #pragma once
-typedef struct WinProcClass
+typedef struct VTABLE
 {
-	HWND hwnd;
-
 	int (*WinProc)(HWND, UINT, WPARAM, LPARAM);
-
 	int (*WinPaint)(HWND);
 	int (*WinSize)(HWND, LPARAM, WPARAM);
+}VTABLE;
+
+typedef struct WinProcClass
+{
+	VTABLE* vTable;
+	HWND hwnd;
+
 }WinProcClass;
-
-int WinProc(HWND, UINT, WPARAM, LPARAM);
-
-int WinPaint(HWND);
-int WinSize(HWND, LPARAM, WPARAM);
 
 WinProcClass* WinProcClassConstructor();
 void WinProcClassDestructor(WinClass);

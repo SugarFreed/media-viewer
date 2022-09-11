@@ -7,17 +7,19 @@
 #include <windef.h>
 #include <objbase.h>
 #include <shobjidl.h>
-//#include <combaseapi.h>
 
 #include "WinProcClass.h"
 
 int APIENTRY WinMain(_In_ HINSTANCE hInst, _In_opt_ HINSTANCE hInstPrev, _In_ PSTR cmdline, _In_ int cmdshow)
 {
-    HRESULT hr = CoInitialize(NULL);
+    HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+    if (FAILED(hr))
+    {
+        return 0;
+    }
     
     // Create process object
     WinProcClass* winProcObj = WinProcClassConstructor();
-    
     if (winProcObj == NULL)
     {
         return 0;
@@ -28,7 +30,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInst, _In_opt_ HINSTANCE hInstPrev, _In_ PS
     
     WNDCLASS wc = {0};
     wc.lpszClassName = CLASSNAME;
-    wc.lpfnWndProc = WinProc;
+    wc.lpfnWndProc = winProcObj->vTable->WinProc;
     wc.hInstance = hInst;
     
     RegisterClass(&wc);
@@ -55,18 +57,6 @@ int APIENTRY WinMain(_In_ HINSTANCE hInst, _In_opt_ HINSTANCE hInstPrev, _In_ PS
     }
     
     ShowWindow(hwnd, cmdshow);  // Display window based on cmdshow value
-
-    if (SUCCEEDED(hr))
-    {
-        IFileOpenDialog* pFileOpen = NULL;
-        hr = CoCreateInstance(&CLSID_FileOpenDialog, NULL, CLSCTX_ALL, &IID_IFileOpenDialog, (LPVOID*)&pFileOpen);
-        if (SUCCEEDED(hr) && pFileOpen != NULL)
-        {
-            pFileOpen->lpVtbl->Show(pFileOpen, NULL);
-            IShellItem** pItem = NULL;
-            pFileOpen->lpVtbl->GetResult(pFileOpen, pItem);
-        }
-    }
     
     // Begin message loop
     MSG msg;
@@ -75,8 +65,8 @@ int APIENTRY WinMain(_In_ HINSTANCE hInst, _In_opt_ HINSTANCE hInstPrev, _In_ PS
         TranslateMessage(&msg);
         DispatchMessageW(&msg);
     }
-    CoUninitialize();
     WinProcClassDestructor(winProcObj);
+    CoUninitialize();
     return 0;
 }
 
