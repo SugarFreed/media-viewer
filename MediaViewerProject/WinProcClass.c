@@ -1,13 +1,12 @@
 #include <windows.h>
 #include <windef.h>
-#include <objbase.h>
-#include <shobjidl.h>
 
 #include "WinProcClass.h"
 
 // Object control
 WinProcClass* WinProcClassConstructor()
 {
+    
     WinProcClass* object = (WinProcClass*)malloc(sizeof(WinProcClass));
     if (object == NULL) 
     {
