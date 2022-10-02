@@ -30,7 +30,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInst, _In_opt_ HINSTANCE hInstPrev, _In_ PS
     
     WNDCLASS wc = {0};
     wc.lpszClassName = CLASSNAME;
-    wc.lpfnWndProc = winProcObj->vTable->WinProc;
+    wc.lpfnWndProc = winProcObj->vTble->WinProc;
     wc.hInstance = hInst;
     
     RegisterClass(&wc);
