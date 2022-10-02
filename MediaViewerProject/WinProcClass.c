@@ -18,18 +18,17 @@ WinProcClass* WinProcClassConstructor()
     {
         return NULL;
     }
-    VTABLE vTbl = {
-        vTbl.WinProc = WinProc,
-        vTbl.WinPaint = WinPaint,
-        vTbl.WinClose = WinClose,
-        vTbl.WinSize = WinSize
-    };
-    object->vTable = &vTbl;
+    object->vTble = (VTABLE*)malloc(sizeof(VTABLE));
+    object->vTble->WinClose = WinClose;
+    object->vTble->WinPaint = WinPaint;
+    object->vTble->WinProc = WinProc;
+    object->vTble->WinSize = WinSize;
 
     return object;
 }
 void WinProcClassDestructor(WinProcClass *object)
 {
+    free(object->vTble);
     free(object);
 }
 
@@ -40,7 +39,7 @@ int WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     if (uMsg == WM_CREATE)
     {
         CREATESTRUCT* createptr = (CREATESTRUCT*)lParam; // Extract CREATESTRUCT containing data
-        LONG lptr = (createptr->lpCreateParams); // Extract params from createptr
+        LONG_PTR lptr = (createptr->lpCreateParams); // Extract params from createptr
         SetWindowLongPtr(hwnd, GWLP_USERDATA, lptr); // Store data in GWLP_USERDATA
     }
     else
@@ -48,12 +47,13 @@ int WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         winProcObj = (WinProcClass*)GetWindowLongPtr(hwnd, GWLP_USERDATA); // Retrieve data from GWLP_USERDATA
     }
 
+
     switch (uMsg)
     {
     case WM_PAINT:
-        return WinPaint(hwnd);
+        return winProcObj->vTble->WinPaint(hwnd);
     case WM_CLOSE:
-        return WinClose(hwnd);
+        return winProcObj->vTble->WinClose(hwnd);
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
@@ -66,7 +66,6 @@ int WinPaint(HWND hwnd)
 
     // Painting space
     FillRect(hdc, &winPaintStruct.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
-
     EndPaint(hwnd, &winPaintStruct);
     return 0;
 }

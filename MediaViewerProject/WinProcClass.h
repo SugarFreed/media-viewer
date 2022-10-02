@@ -9,7 +9,7 @@ typedef struct VTABLE
 
 typedef struct WinProcClass
 {
-	VTABLE* vTable;
+	VTABLE* vTble;
 	HWND hwnd;
 
 }WinProcClass;
