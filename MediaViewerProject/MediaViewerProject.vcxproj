@@ -145,10 +145,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Graphics.c" />
     <ClCompile Include="WinProcClass.c" />
     <ClCompile Include="WinMain.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Graphics.h" />
     <ClInclude Include="WinProcClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

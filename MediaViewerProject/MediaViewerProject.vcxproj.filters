@@ -21,9 +21,15 @@
     <ClCompile Include="WinProcClass.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinProcClass.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
